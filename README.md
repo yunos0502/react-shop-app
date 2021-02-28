@@ -2,6 +2,4 @@
 
 ### React / Node.js / MongoDB / Redux / Express.js
 
-#### 실행
-
-npm run dev
+#### npm run dev
