@@ -19,7 +19,6 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).single('file');
 
 router.post('/image', (req, res) => {
-  // 가져온 이미지를 저장
   upload(req, res, (err) => {
     if (err) {
       return req.json({ success: false, err });
@@ -33,11 +32,24 @@ router.post('/image', (req, res) => {
 });
 
 router.post('/list', (req, res) => {
-  // product collection에 들어있는 모든 상품 정보를 가져옴
   let limit = req.body.limit ? parseInt(req.body.limit) : 20;
   let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+  let findArgs = {};
 
-  Product.find()
+  for (let key in req.body.filters) {
+    if (req.body.filters[key].length > 0) {
+      if (key === 'price') {
+        findArgs[key] = {
+          $gte: req.body.filters[key][0],
+          $lte: req.body.filters[key][1],
+        };
+      } else {
+        findArgs[key] = req.body.filters[key];
+      }
+    }
+  }
+
+  Product.find(findArgs)
     .populate('writer')
     .skip(skip)
     .limit(limit)
@@ -50,7 +62,6 @@ router.post('/list', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  // 받아온 정보들을 DB에 저장.
   const product = new Product(req.body);
 
   product.save((err) => {

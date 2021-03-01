@@ -24,7 +24,7 @@ const FileUpload = ({ refreshFunction }) => {
     });
   };
 
-  const deleteHandler = (image) => {
+  const deleteHandler = (image) => () => {
     const currentIndex = Images.indexOf(image);
     let newImages = [...Images];
     newImages.splice(currentIndex, 1);
@@ -64,7 +64,7 @@ const FileUpload = ({ refreshFunction }) => {
         }}
       >
         {Images.map((image, index) => (
-          <div key={index} onClick={() => deleteHandler(image)}>
+          <div key={index} onClick={deleteHandler(image)}>
             <img
               style={{ minWidth: 300, width: 300, height: 240 }}
               src={`http://localhost:5000/${image}`}
